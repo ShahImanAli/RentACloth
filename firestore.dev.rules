@@ -1,0 +1,25 @@
+rules_version = '2';
+
+service cloud.firestore {
+  match /databases/{database}/documents {
+    
+    // ===============================
+    // DEVELOPMENT-ONLY PERMISSIVE RULES
+    // ⚠️ WARNING: DO NOT USE IN PRODUCTION
+    // ===============================
+    
+    function isAuthenticated() {
+      return request.auth != null;
+    }
+    
+    // Allow all authenticated users to read/write everything for development
+    match /{document=**} {
+      allow read, write, create, update, delete: if isAuthenticated();
+    }
+    
+    // Fallback: Allow read access to products for unauthenticated users (for browsing)
+    match /products/{productId} {
+      allow read: if true;
+    }
+  }
+}

@@ -1,0 +1,72 @@
+# Logs
+logs
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+lerna-debug.log*
+
+node_modules
+dist
+dist-ssr
+*.local
+
+# Environment variables
+.env
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+
+# Editor directories and files
+.vscode/*
+!.vscode/extensions.json
+.idea
+.DS_Store
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.sw?
+
+# Debug and testing files (prevent recreation)
+debug-*.html
+debug_*.js
+*debug*.js
+admin-setup-guide.js
+StorageStatusTest.jsx
+AdminDebugger.jsx
+DebugUserData.jsx
+StorageTest.jsx
+ImageSystemInfo.jsx
+
+# Instruction and guide files (prevent recreation)
+*.txt
+*DEBUG_GUIDE.md
+*PERSISTENCE_GUIDE.md
+*PERSISTENCE_FIX.md
+*PERSISTENCE_TEST.md
+*ISOLATION_FIX.md
+*ISOLATION_TEST_GUIDE.md
+*CRITICAL_*.md
+firebase-storage-*.txt
+firestore-*.txt
+
+# Empty files (prevent recreation)
+**/AdminDebugger.jsx
+**/DebugUserData.jsx
+**/StorageStatusTest.jsx
+**/ImageSystemInfo.jsx
+**/StorageTest.jsx
+**/useCartOperations.js
+**/useDataSyncContext.js
+**/adminInit.js
+**/authErrorHandler.js
+**/browserCompat.js
+**/connectivity.js
+**/envValidation.js
+**/imageUpload.js
+
+# Empty utils directory
+src/utils/
