@@ -249,9 +249,8 @@ const syncOptimisticRental = createAsyncThunk(
         );
         return { optimisticId, firebaseId: result.id };
       } else {
-        // Mark as failed but keep in cart for retry
         dispatch({
-          type: "cart/rollbackRental",
+          type: "cart/markRentalSyncFailed",
           payload: { optimisticId, error: result.error },
         });
         return rejectWithValue(result.error);
@@ -262,9 +261,8 @@ const syncOptimisticRental = createAsyncThunk(
         error.message
       );
 
-      // Rollback optimistic update
       dispatch({
-        type: "cart/rollbackRental",
+        type: "cart/markRentalSyncFailed",
         payload: { optimisticId, error: error.message },
       });
 
@@ -547,6 +545,18 @@ const cartSlice = createSlice({
     },
 
     // Retry failed optimistic sync
+    markRentalSyncFailed: (state, action) => {
+      const { optimisticId, error } = action.payload;
+      const item = state.items.find(
+        (item) => item.optimisticId === optimisticId
+      );
+      if (item) {
+        item.syncStatus = "failed";
+        item.syncError = error;
+        console.log("[REDUCER] Rental sync failed, keeping in cart:", optimisticId);
+      }
+    },
+
     retryRentalSync: (state, action) => {
       const { optimisticId } = action.payload;
       const item = state.items.find(
