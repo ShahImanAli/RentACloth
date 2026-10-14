@@ -13,8 +13,7 @@ import {
   useStripe,
   useElements,
 } from "@stripe/react-stripe-js";
-import { httpsCallable } from "firebase/functions";
-import { functions } from "../firebase/config";
+
 
 const stripePromise = loadStripe(
   "pk_test_51SKNbsDXvAcUGHzk9VTzZfpJAwB4WuMb2X93RbehYTLr84CJBaMxE5PPRT33zUQ85bKFXpjWv3ioE92ZcR7l19Wl000SIFnQI1"
@@ -187,14 +186,16 @@ const CheckoutForm = () => {
           "Amount to send:",
           Math.round(total * 100)
         );
-        const createPaymentIntent = httpsCallable(
-          functions,
-          "createPaymentIntent"
-        );
-        const result = await createPaymentIntent({
-          amount: Math.round(total * 100),
+        const response = await fetch("/api/create-payment-intent", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ amount: Math.round(total * 100) }),
         });
-        const clientSecret = result.data.clientSecret;
+        const result = await response.json();
+        if (!response.ok) {
+          throw new Error(result.error || "Payment failed");
+        }
+        const clientSecret = result.clientSecret;
 
         // Create payment method using the separate card elements
         const { error: paymentMethodError, paymentMethod } =
