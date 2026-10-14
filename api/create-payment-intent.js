@@ -17,7 +17,6 @@ export default async function handler(req, res) {
     const paymentIntent = await stripe.paymentIntents.create({
       amount: amount,
       currency: "usd",
-      payment_method_types: ["card"],
     });
 
     return res.status(200).json({ clientSecret: paymentIntent.client_secret });
