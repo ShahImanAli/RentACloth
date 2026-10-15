@@ -176,12 +176,12 @@ export const sendBookingConfirmationNotification = async (bookingData) => {
         notificationRecord.notificationId,
         NOTIFICATION_STATUS.FAILED,
         {
-          errorMessage: emailResult.error,
+          errorMessage: emailResult.error || "Email sending failed",
           failedAt: new Date().toISOString(),
         }
       );
 
-      throw new Error(`Email failed: ${emailResult.error}`);
+      throw new Error(`Email failed: ${emailResult.error || "Unknown error"}`);
     }
   } catch (error) {
     console.error("Error sending booking confirmation notification:", error);
@@ -260,19 +260,18 @@ export const sendBookingCompletionNotification = async (bookingData) => {
         notificationRecord.notificationId,
         NOTIFICATION_STATUS.FAILED,
         {
-          errorMessage: emailResult.error,
+          errorMessage: emailResult.error || "Email sending failed",
           failedAt: new Date().toISOString(),
         }
       );
 
-      throw new Error(`Email failed: ${emailResult.error}`);
+      throw new Error(`Email failed: ${emailResult.error || "Unknown error"}`);
     }
   } catch (error) {
     console.error("Error sending booking completion notification:", error);
     return { success: false, error: error.message };
   }
 };
-
 
 export const createInAppReminder = async (bookingData, reminderType) => {
   console.log(`Creating in-app reminder: ${reminderType}`, bookingData);

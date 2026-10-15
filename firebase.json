@@ -21,6 +21,10 @@
     ],
     "rewrites": [
       {
+        "source": "/api/send-email",
+        "function": "sendEmail"
+      },
+      {
         "source": "**",
         "destination": "/index.html"
       }
