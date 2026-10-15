@@ -20,7 +20,7 @@ import { db } from "../firebase/config";
 import {
   sendBookingConfirmationEmail,
   sendReturnConfirmationEmail,
-} from "./emailService";
+} from "./mailService";
 
 // Collection name for rental notifications (separate from general notifications)
 const RENTAL_NOTIFICATIONS_COLLECTION = "rental_notifications";
