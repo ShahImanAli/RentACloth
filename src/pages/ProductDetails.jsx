@@ -215,27 +215,27 @@ function ProductDetails() {
   const handleRentalAddToCart = async () => {
     // Validation checks
     if (!user) {
-      alert("Please log in to add rental to cart.");
+      console.warn("Please log in to add rental to cart.");
       return;
     }
 
     if (!selectedDates.start) {
-      alert("Please select rental dates.");
+      console.warn("Please select rental dates.");
       return;
     }
 
     if (rentalType === "daily" && !selectedDates.end) {
-      alert("Please select both start and end dates for daily rental.");
+      console.warn("Please select both start and end dates for daily rental.");
       return;
     }
 
     if (product.sizes && product.sizes.length > 0 && !selectedSize) {
-      alert("Please select a size for this item.");
+      console.warn("Please select a size for this item.");
       return;
     }
 
     if (!rentalPricing) {
-      alert("Unable to calculate rental pricing. Please try again.");
+      console.warn("Unable to calculate rental pricing. Please try again.");
       return;
     }
 
@@ -246,9 +246,7 @@ function ProductDetails() {
       console.log("Checking product availability before adding to cart...");
       const currentAvailable = product.availableQuantity || 0;
       if (currentAvailable <= 0) {
-        alert(
-          `Sorry, "${product.title}" is currently out of stock. Please try another item.`
-        );
+        console.warn(`Sorry, "${product.title}" is currently out of stock.`);
         setIsProcessingRental(false);
         return;
       }
@@ -347,34 +345,6 @@ function ProductDetails() {
 
       console.log("Rental added to cart successfully!");
 
-      // Show success notification with rental details (using serialized dates)
-      const startDateFormatted = new Date(
-        rentalData.startDate
-      ).toLocaleDateString();
-      const endDateFormatted = new Date(
-        rentalData.endDate
-      ).toLocaleDateString();
-      const message =
-        rentalType === "hourly"
-          ? `🛒 Rental added to cart!\n📅 ${startDateFormatted} from ${startTime} to ${endTime}\n💰 Total: $${rentalPricing.totalPrice.toFixed(
-              2
-            )}\n\nCheck the cart icon (🛒) in the navigation to proceed to checkout.`
-          : `🛒 Rental added to cart!\n📅 ${startDateFormatted} to ${endDateFormatted}\n💰 Total: $${rentalPricing.totalPrice.toFixed(
-              2
-            )}\n\nCheck the cart icon (🛒) in the navigation to proceed to checkout.`;
-
-      // Add availability update to success message
-      const updatedAvailability = Math.max(
-        0,
-        (product.availableQuantity || 0) - 1
-      );
-      const availabilityMessage =
-        updatedAvailability > 0
-          ? `\n📦 Remaining: ${updatedAvailability} item(s) available`
-          : `\n📦 This item is now out of stock`;
-
-      alert(message + availabilityMessage);
-
       // Refresh product data after a short delay to get updated availability from database
       setTimeout(() => {
         console.log("Refreshing product data after booking...");
@@ -390,9 +360,6 @@ function ProductDetails() {
       // User can navigate to cart manually when ready
     } catch (error) {
       console.error("Booking error:", error);
-      alert(
-        `Failed to complete booking: ${error.message || "Please try again."}`
-      );
     } finally {
       setIsProcessingRental(false);
     }
