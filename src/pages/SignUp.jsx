@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
+import toast from "react-hot-toast";
 import { signUpWithEmailAndPassword, signUpWithGoogle } from "../firebase/auth";
 
 const SignUp = () => {
@@ -84,17 +85,16 @@ const SignUp = () => {
       );
 
       if (result.success) {
-        setSuccessMessage(result.message);
-        // Redirect to login after 2 seconds
+        toast.success(result.message || "Account created successfully!");
         setTimeout(() => {
           navigate("/login");
         }, 2000);
       } else {
-        setErrors({ submit: result.message });
+        toast.error(result.message || "Signup failed.");
       }
     } catch (error) {
       console.error("Signup error:", error);
-      setErrors({ submit: "An unexpected error occurred. Please try again." });
+      toast.error("An unexpected error occurred. Please try again.");
     } finally {
       setLoading(false);
     }
@@ -107,20 +107,16 @@ const SignUp = () => {
     try {
       const result = await signUpWithGoogle();
       if (result.success) {
-        setSuccessMessage(result.message);
+        toast.success(result.message || "Google sign-up successful!");
         setTimeout(() => {
-          navigate("/login", {
-            state: {
-              message: result.message,
-            },
-          });
+          navigate("/login");
         }, 1500);
       } else {
-        setErrors({ submit: result.message });
+        toast.error(result.message || "Google sign-up failed.");
       }
     } catch (error) {
       console.error("Google signup error:", error);
-      setErrors({ submit: "Google sign-up failed. Please try again." });
+      toast.error("Google sign-up failed. Please try again.");
     } finally {
       setLoading(false);
     }

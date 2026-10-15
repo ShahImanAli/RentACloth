@@ -1,5 +1,6 @@
 import { createRoot } from "react-dom/client";
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
+import { Toaster } from "react-hot-toast";
 import { store } from "./store/store.js";
 import { Provider } from "react-redux";
 import { AuthProvider } from "./context/AuthContext.jsx";
@@ -77,6 +78,18 @@ createRoot(document.getElementById("root")).render(
     <AuthProvider>
       <AdminProvider>
         <RouterProvider router={router} />
+        <Toaster
+          position="top-center"
+          toastOptions={{
+            duration: 3000,
+            style: {
+              background: "#1f2937",
+              color: "#fff",
+              borderRadius: "10px",
+              padding: "12px 20px",
+            },
+          }}
+        />
       </AdminProvider>
     </AuthProvider>
   </Provider>

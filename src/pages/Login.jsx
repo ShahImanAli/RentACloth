@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
 import { Link, useNavigate, useLocation } from "react-router-dom";
+import toast from "react-hot-toast";
 import {
   signInWithEmailPassword as firebaseSignIn,
   signInWithGoogle,
@@ -43,16 +44,16 @@ const Login = () => {
       const result = await firebaseSignIn(formData.email, formData.password);
 
       if (result.success) {
-        setSuccessMessage(result.message);
+        toast.success(result.message || "Login successful!");
         setTimeout(() => {
           navigate("/");
         }, 1500);
       } else {
-        setErrors({ submit: result.message });
+        toast.error(result.message || "Login failed.");
       }
     } catch (error) {
       console.error("Login error:", error);
-      setErrors({ submit: "An unexpected error occurred. Please try again." });
+      toast.error("An unexpected error occurred. Please try again.");
     } finally {
       setLoading(false);
     }
@@ -66,17 +67,16 @@ const Login = () => {
       const result = await signInWithGoogle();
 
       if (result.success) {
-        setSuccessMessage(result.message);
+        toast.success(result.message || "Google sign-in successful!");
         setTimeout(() => {
           navigate("/");
         }, 1500);
       } else {
-        console.error("Google sign-in failed:", result.message); // Debug log
-        setErrors({ submit: result.message });
+        toast.error(result.message || "Google sign-in failed.");
       }
     } catch (error) {
       console.error("Google login error:", error);
-      setErrors({ submit: "Google sign-in failed. Please try again." });
+      toast.error("Google sign-in failed. Please try again.");
     } finally {
       setLoading(false);
     }

@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
 import { useParams, useNavigate } from "react-router-dom";
+import toast from "react-hot-toast";
 import { useDispatch, useSelector } from "react-redux";
 import { addRental, syncOptimisticRental } from "../store/cartSlice";
 import { toggleWishlist } from "../store/wishlistSlice";
@@ -215,27 +216,27 @@ function ProductDetails() {
   const handleRentalAddToCart = async () => {
     // Validation checks
     if (!user) {
-      console.warn("Please log in to add rental to cart.");
+      toast.error("Please log in to add rental to cart.");
       return;
     }
 
     if (!selectedDates.start) {
-      console.warn("Please select rental dates.");
+      toast.error("Please select rental dates.");
       return;
     }
 
     if (rentalType === "daily" && !selectedDates.end) {
-      console.warn("Please select both start and end dates for daily rental.");
+      toast.error("Please select both start and end dates for daily rental.");
       return;
     }
 
     if (product.sizes && product.sizes.length > 0 && !selectedSize) {
-      console.warn("Please select a size for this item.");
+      toast.error("Please select a size for this item.");
       return;
     }
 
     if (!rentalPricing) {
-      console.warn("Unable to calculate rental pricing. Please try again.");
+      toast.error("Unable to calculate rental pricing. Please try again.");
       return;
     }
 
@@ -246,7 +247,7 @@ function ProductDetails() {
       console.log("Checking product availability before adding to cart...");
       const currentAvailable = product.availableQuantity || 0;
       if (currentAvailable <= 0) {
-        console.warn(`Sorry, "${product.title}" is currently out of stock.`);
+        toast.error(`Sorry, "${product.title}" is currently out of stock.`);
         setIsProcessingRental(false);
         return;
       }
@@ -343,7 +344,13 @@ function ProductDetails() {
         );
       }
 
-      console.log("Rental added to cart successfully!");
+      const startDateFormatted = new Date(rentalData.startDate).toLocaleDateString();
+      const endDateFormatted = new Date(rentalData.endDate).toLocaleDateString();
+      toast.success(
+        rentalType === "hourly"
+          ? `Rental added to cart! ${startDateFormatted} from ${startTime} to ${endTime} - Total: $${rentalPricing.totalPrice.toFixed(2)}`
+          : `Rental added to cart! ${startDateFormatted} to ${endDateFormatted} - Total: $${rentalPricing.totalPrice.toFixed(2)}`
+      );
 
       // Refresh product data after a short delay to get updated availability from database
       setTimeout(() => {
@@ -356,10 +363,13 @@ function ProductDetails() {
       setRentalPricing(null);
       setSelectedSize("");
 
+      toast.success("Rental booked successfully!");
+
       // NO redirect - let user continue shopping
       // User can navigate to cart manually when ready
     } catch (error) {
       console.error("Booking error:", error);
+      toast.error(`Failed to complete booking: ${error.message || "Please try again."}`);
     } finally {
       setIsProcessingRental(false);
     }
